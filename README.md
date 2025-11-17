@@ -1,7 +1,9 @@
 **1. Clone & Install**
 
-git clone <repo-url>
-cd <repo>
+git clone *repo URL*
+
+cd *repo*
+
 npm install
 
 **2. Create .env**
