@@ -7,12 +7,19 @@
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest",
-		"cf-typegen": "wrangler types"
+		"cf-typegen": "wrangler types",
+		"postinstall": "prisma generate"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",
+		"prisma": "^6.19.0",
 		"typescript": "^5.5.2",
 		"vitest": "~3.2.0",
 		"wrangler": "^4.47.0"
+	},
+	"dependencies": {
+		"@prisma/client": "^6.19.0",
+		"@prisma/extension-accelerate": "^2.0.2",
+		"dotenv": "^17.2.3"
 	}
 }

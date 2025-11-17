@@ -1,18 +1,23 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
+
+export interface Env {
+  DATABASE_URL: string;
+}
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
-	},
+  async fetch(request, env, ctx) {
+    const prisma = new PrismaClient({
+      datasourceUrl: "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19TTXgzUmFrbWdpRGlxXy1JaWtUa3IiLCJhcGlfa2V5IjoiMDFLQTdZMjMwMkpLVlhSTjJHNzIzQTZKV1AiLCJ0ZW5hbnRfaWQiOiJjMzFiMTIxZTRlZjhmMDA0MjE1NTQ5ODE3NzRiZDM3Mjk4MTUyNjczYjQ5YWJhMDhmZDk3MjliMjNiNzQwYTczIiwiaW50ZXJuYWxfc2VjcmV0IjoiODJlYjlkYWItYzNmZS00MjY0LWE4NWUtMTVmNzE0ZThiYjIzIn0.21Oq015NK2F10gj9N_OFORrTRj1nPaxwvC5rs5HisnU",
+    }).$extends(withAccelerate());
+
+    const logs = await prisma.log.create({
+	  data: {
+		message: "Hello, Cloudflare with Prisma!",
+		level: "INFO",
+	  },
+	});
+    const result = JSON.stringify(logs);
+    return new Response(result);
+  },
 } satisfies ExportedHandler<Env>;
